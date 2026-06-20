@@ -1,0 +1,88 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SokoConnect - Connect Local Businesses{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation Header -->
+    <header class="navbar">
+        <div class="container">
+            <div class="navbar-brand">
+                <a href="{% url 'business:home' %}" class="logo">
+                    <i class="fas fa-store"></i>
+                    <span>SokoConnect</span>
+                </a>
+            </div>
+            <nav class="nav-menu">
+                <a href="{% url 'business:home' %}" class="nav-link">Home</a>
+                <a href="{% url 'business:listings' %}" class="nav-link">Businesses</a>
+                <a href="{% url 'business:about' %}" class="nav-link">About</a>
+                <a href="{% url 'business:contact' %}" class="nav-link">Contact</a>
+                <a href="{% url 'business:login' %}" class="nav-link">Login</a>
+                <a href="{% url 'business:register' %}" class="nav-link btn-primary">Register</a>
+            </nav>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>SokoConnect</h3>
+                    <p>Connecting local businesses and traders to grow together.</p>
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/me/"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.linkedin.com/in/packsens-kalembo"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="{% url 'business:home' %}">Home</a></li>
+                        <li><a href="{% url 'business:about' %}">About Us</a></li>
+                        <li><a href="{% url 'business:contact' %}">Contact</a></li>
+                        <li><a href="{% url 'business:login' %}">Login</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <p><i class="fas fa-envelope"></i> pk@okoconnect.com</p>
+                    <p><i class="fas fa-phone"></i> +255613850281</p>
+                    <p><i class="fas fa-map-marker-alt"></i> Dar es salaam, Tanzania</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Newsletter</h4>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Your email" required>
+                        <button type="submit">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 SokoConnect. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/script.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

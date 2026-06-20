@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Login - SokoConnect{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h1>Welcome Back!</h1>
+                <p>Sign in to access your business dashboard</p>
+            </div>
+
+            <form class="auth-form" method="POST" action="{% url 'business:login' %}">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required placeholder="Enter your email">
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required placeholder="Enter your password">
+                </div>
+
+                <div class="form-group checkbox">
+                    <input type="checkbox" id="remember" name="remember">
+                    <label for="remember">Remember me</label>
+                </div>
+
+                <div class="form-group">
+                    <a href="#" class="forgot-password">Forgot your password?</a>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+            </form>
+
+            <div class="auth-divider">
+                <span>or</span>
+            </div>
+
+            <div class="social-login">
+                <button class="social-btn google">
+                    <i class="fab fa-google"></i> Sign in with Google
+                </button>
+                <button class="social-btn facebook">
+                    <i class="fab fa-facebook"></i> Sign in with Facebook
+                </button>
+            </div>
+
+            <div class="auth-footer">
+                <p>Don't have an account? <a href="{% url 'business:register' %}" class="link">Create one now</a></p>
+            </div>
+        </div>
+
+        <div class="auth-image">
+            <div class="placeholder-large">
+                <i class="fas fa-lock"></i>
+                <p>Secure Login</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

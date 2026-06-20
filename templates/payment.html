@@ -1,0 +1,550 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Payment - SokoConnect{% endblock %}
+
+{% block content %}
+<section class="payment-section">
+    <div class="container">
+        <div class="payment-header">
+            <h1>Complete Your Payment</h1>
+            <p>Finalize your business listing by completing the payment</p>
+        </div>
+
+        <!-- Messages -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="payment-container">
+            <div class="payment-card">
+                <div class="payment-header-inner">
+                    <h2>Payment Summary</h2>
+                </div>
+
+                <div class="business-summary">
+                    <h3>{{ business.business_name }}</h3>
+                    <p class="category-badge">{{ business.get_category_display }}</p>
+                </div>
+
+                <div class="payment-details">
+                    <div class="payment-row">
+                        <span>Business Listing Fee:</span>
+                        <span class="amount" id="payment-amount">{{ paypal_currency }} {{ paypal_amount }}</span>
+                    </div>
+                    <div class="payment-row">
+                        <span>Tax (0%):</span>
+                        <span class="amount">0.00</span>
+                    </div>
+                    <div class="payment-row total">
+                        <span>Total Amount:</span>
+                        <span class="amount" id="total-amount">{{ paypal_currency }} {{ paypal_amount }}</span>
+                    </div>
+                </div>
+
+                <div class="payment-info">
+                    <div class="info-box">
+                        <i class="fas fa-shield-alt"></i>
+                        <h4>Secure Payment</h4>
+                        <p>Your payment is encrypted and secure</p>
+                    </div>
+                    <div class="info-box">
+                        <i class="fas fa-clock"></i>
+                        <h4>Instant Verification</h4>
+                        <p>After payment, your listing will be reviewed by our admin</p>
+                    </div>
+                    <div class="info-box">
+                        <i class="fas fa-check-circle"></i>
+                        <h4>All Included</h4>
+                        <p>Admin review, listing approval, and support</p>
+                    </div>
+                </div>
+
+                <div class="payment-methods">
+                    <h3>Select Payment Method</h3>
+                    
+                    <form method="POST" class="payment-form" id="payment-form">
+                        {% csrf_token %}
+                        
+                        <div class="method-option">
+                            <input type="radio" id="paypal" name="payment_method" value="paypal" checked>
+                            <label for="paypal">
+                                <i class="fab fa-paypal"></i>
+                                <span>
+                                    <strong>PayPal</strong>
+                                    <small>{{ paypal_currency }} {{ paypal_amount }} - Secure global payment</small>
+                                </span>
+                            </label>
+                        </div>
+
+                        <div class="method-option">
+                            <input type="radio" id="mpesa" name="payment_method" value="mpesa">
+                            <label for="mpesa">
+                                <i class="fas fa-mobile-alt"></i>
+                                <span>
+                                    <strong>M-Pesa (Vodacom)</strong>
+                                    <small>{{ mpesa_currency }} {{ mpesa_amount }} - Mobile money payment</small>
+                                </span>
+                            </label>
+                        </div>
+
+                        <div class="method-option">
+                            <input type="radio" id="airtel_money" name="payment_method" value="airtel_money">
+                            <label for="airtel_money">
+                                <i class="fas fa-mobile-alt"></i>
+                                <span>
+                                    <strong>Airtel Money (Airtel)</strong>
+                                    <small>{{ mpesa_currency }} {{ mpesa_amount }} - Mobile money payment</small>
+                                </span>
+                            </label>
+                        </div>
+
+                        <div class="method-option">
+                            <input type="radio" id="tigo_pesa" name="payment_method" value="tigo_pesa">
+                            <label for="tigo_pesa">
+                                <i class="fas fa-mobile-alt"></i>
+                                <span>
+                                    <strong>Tigo Pesa (Tigo)</strong>
+                                    <small>{{ mpesa_currency }} {{ mpesa_amount }} - Mobile money payment</small>
+                                </span>
+                            </label>
+                        </div>
+
+                        <!-- Mobile Money Phone Input (Hidden by default) -->
+                        <div id="mobile_money_phone_input" style="display: none; margin: 1.5rem 0;">
+                            <div class="form-group">
+                                <label for="mobile_money_phone">Phone Number</label>
+                                <input type="tel" id="mobile_money_phone" name="mobile_money_phone" placeholder="255712345678" 
+                                       pattern="^255[0-9]{9}$" 
+                                       title="Please enter a valid Tanzania phone number (e.g., 255712345678)">
+                                <small>Format: 255xxxxxxxxx (Tanzanian format)</small>
+                            </div>
+                        </div>
+
+                        <div class="payment-info">
+                            <div class="info-box">
+                                <i class="fas fa-shield-alt"></i>
+                                <h4>Secure Payment</h4>
+                                <p>Your payment is encrypted and secure</p>
+                            </div>
+                            <div class="info-box">
+                                <i class="fas fa-clock"></i>
+                                <h4>Instant Verification</h4>
+                                <p>After payment, your listing will be reviewed by our admin</p>
+                            </div>
+                            <div class="info-box">
+                                <i class="fas fa-check-circle"></i>
+                                <h4>All Included</h4>
+                                <p>Admin review, listing approval, and support</p>
+                            </div>
+                        </div>
+
+                        <div class="terms-agreement">
+                            <input type="checkbox" id="terms_agree" name="terms_agree" required>
+                            <label for="terms_agree">
+                                I agree to the <a href="#">Terms & Conditions</a> and <a href="#">Privacy Policy</a>
+                            </label>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-lg btn-block" id="submit-btn">
+                            <i class="fas fa-lock"></i> <span id="btn-text">Pay with PayPal - {{ paypal_currency }} {{ paypal_amount }}</span>
+                        </button>
+                    </form>
+                </div>
+
+                <div class="payment-note">
+                    <p>
+                        <i class="fas fa-info-circle"></i>
+                        <strong>Next Steps:</strong> After payment, your business listing will be reviewed 
+                        by our admin team within 24-48 hours. You'll receive an email notification once your 
+                        business is approved or if we need more information.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.payment-section {
+    padding: 2rem 0;
+    min-height: 80vh;
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(16, 185, 129, 0.05) 100%);
+}
+
+.payment-header {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.payment-header h1 {
+    margin-bottom: 0.5rem;
+    color: #1f2937;
+}
+
+.payment-header p {
+    color: #6b7280;
+    font-size: 1.1rem;
+}
+
+.payment-container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.payment-card {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.payment-header-inner {
+    padding: 2rem;
+    background: linear-gradient(135deg, #2563eb 0%, #10b981 100%);
+    color: white;
+}
+
+.payment-header-inner h2 {
+    margin: 0;
+    color: white;
+}
+
+.business-summary {
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid #e5e7eb;
+    background-color: #f9fafb;
+}
+
+.business-summary h3 {
+    margin: 0 0 0.5rem 0;
+    color: #1f2937;
+}
+
+.category-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background-color: #dbeafe;
+    color: #0369a1;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.payment-details {
+    padding: 2rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.payment-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    color: #6b7280;
+}
+
+.payment-row.total {
+    border-top: 2px solid #e5e7eb;
+    padding-top: 1rem;
+    font-weight: 600;
+    color: #1f2937;
+    font-size: 1.1rem;
+}
+
+.amount {
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.payment-info {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    padding: 2rem;
+    background-color: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.info-box {
+    text-align: center;
+}
+
+.info-box i {
+    font-size: 2rem;
+    color: #2563eb;
+    margin-bottom: 0.5rem;
+}
+
+.info-box h4 {
+    margin: 0.5rem 0;
+    color: #1f2937;
+    font-size: 0.9rem;
+}
+
+.info-box p {
+    margin: 0;
+    color: #6b7280;
+    font-size: 0.8rem;
+}
+
+.payment-methods {
+    padding: 2rem;
+}
+
+.payment-methods h3 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    color: #1f2937;
+}
+
+.method-option {
+    margin-bottom: 1rem;
+}
+
+.method-option input[type="radio"] {
+    display: none;
+}
+
+.method-option label {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.method-option label:hover {
+    border-color: #2563eb;
+    background-color: #f9fafb;
+}
+
+.method-option input[type="radio"]:checked + label {
+    border-color: #2563eb;
+    background-color: #f0f9ff;
+}
+
+.method-option i {
+    font-size: 1.5rem;
+    color: #2563eb;
+    margin-right: 1rem;
+}
+
+.method-option span {
+    display: flex;
+    flex-direction: column;
+}
+
+.method-option strong {
+    color: #1f2937;
+}
+
+.method-option small {
+    color: #6b7280;
+    font-size: 0.85rem;
+}
+
+.card-element {
+    padding: 1.5rem;
+    background-color: #f9fafb;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    margin: 1.5rem 0;
+}
+
+.terms-agreement {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin: 1.5rem 0;
+}
+
+.terms-agreement input[type="checkbox"] {
+    margin-top: 0.25rem;
+    width: auto;
+}
+
+.terms-agreement label {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #6b7280;
+}
+
+.terms-agreement a {
+    color: #2563eb;
+    text-decoration: none;
+}
+
+.terms-agreement a:hover {
+    text-decoration: underline;
+}
+
+.payment-note {
+    padding: 1.5rem 2rem;
+    background-color: #f0f9ff;
+    border-top: 1px solid #e5e7eb;
+}
+
+.payment-note p {
+    margin: 0;
+    color: #0369a1;
+    font-size: 0.9rem;
+}
+
+.payment-note i {
+    margin-right: 0.5rem;
+}
+
+.btn-block {
+    width: 100%;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #1f2937;
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.form-group input::placeholder {
+    color: #9ca3af;
+}
+
+.form-group small {
+    display: block;
+    margin-top: 0.35rem;
+    color: #6b7280;
+    font-size: 0.85rem;
+}
+
+.alert {
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+}
+
+.alert-success {
+    background-color: #dcfce7;
+    color: #15803d;
+    border-left: 4px solid #10b981;
+}
+
+.alert-error {
+    background-color: #fee2e2;
+    color: #b91c1c;
+    border-left: 4px solid #ef4444;
+}
+
+.alert-info {
+    background-color: #f0f9ff;
+    color: #0369a1;
+    border-left: 4px solid #0ea5e9;
+}
+
+@media (max-width: 768px) {
+    .payment-info {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const paymentForm = document.getElementById('payment-form');
+    const paypalRadio = document.getElementById('paypal');
+    const mpesaRadio = document.getElementById('mpesa');
+    const airtelMoneyRadio = document.getElementById('airtel_money');
+    const tigoPesaRadio = document.getElementById('tigo_pesa');
+    const mobileMoneyPhoneInput = document.getElementById('mobile_money_phone_input');
+    const submitBtn = document.getElementById('submit-btn');
+    const btnText = document.getElementById('btn-text');
+    const paymentAmountEl = document.getElementById('payment-amount');
+    const totalAmountEl = document.getElementById('total-amount');
+    const phoneField = document.getElementById('mobile_money_phone');
+    
+    const mobileMoneyNetworks = {
+        'mpesa': 'M-Pesa (Vodacom)',
+        'airtel_money': 'Airtel Money',
+        'tigo_pesa': 'Tigo Pesa'
+    };
+    
+    function updateMobileMoneyDisplay(networkValue) {
+        mobileMoneyPhoneInput.style.display = 'block';
+        phoneField.setAttribute('required', 'required');
+        paymentAmountEl.textContent = '{{ mpesa_currency }} {{ mpesa_amount }}';
+        totalAmountEl.textContent = '{{ mpesa_currency }} {{ mpesa_amount }}';
+        btnText.textContent = `Pay with ${mobileMoneyNetworks[networkValue]} - {{ mpesa_currency }} {{ mpesa_amount }}`;
+    }
+    
+    // Handle radio button changes
+    paypalRadio.addEventListener('change', function() {
+        if (this.checked) {
+            mobileMoneyPhoneInput.style.display = 'none';
+            phoneField.removeAttribute('required');
+            paymentAmountEl.textContent = '{{ paypal_currency }} {{ paypal_amount }}';
+            totalAmountEl.textContent = '{{ paypal_currency }} {{ paypal_amount }}';
+            btnText.textContent = 'Pay with PayPal - {{ paypal_currency }} {{ paypal_amount }}';
+        }
+    });
+    
+    mpesaRadio.addEventListener('change', function() {
+        if (this.checked) {
+            updateMobileMoneyDisplay('mpesa');
+        }
+    });
+    
+    airtelMoneyRadio.addEventListener('change', function() {
+        if (this.checked) {
+            updateMobileMoneyDisplay('airtel_money');
+        }
+    });
+    
+    tigoPesaRadio.addEventListener('change', function() {
+        if (this.checked) {
+            updateMobileMoneyDisplay('tigo_pesa');
+        }
+    });
+    
+    // Handle form submission
+    paymentForm.addEventListener('submit', function(e) {
+        const selectedMethod = document.querySelector('input[name="payment_method"]:checked').value;
+        
+        if (['mpesa', 'airtel_money', 'tigo_pesa'].includes(selectedMethod)) {
+            const phone = phoneField.value;
+            if (!phone || !phone.match(/^255[0-9]{9}$/)) {
+                e.preventDefault();
+                alert('Please enter a valid Tanzania phone number (format: 255xxxxxxxxx)');
+                return;
+            }
+        }
+    });
+});
+</script>
+{% endblock %}

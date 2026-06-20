@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home - SokoConnect{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-content">
+        <h1>Welcome to SokoConnect</h1>
+        <p>Empowering Local Traders and Businesses to Connect and Grow Together</p>
+        <div class="hero-buttons">
+            <a href="{% url 'business:register' %}" class="btn btn-primary btn-lg">Get Started</a>
+            <a href="{% url 'business:about' %}" class="btn btn-secondary btn-lg">Learn More</a>
+        </div>
+    </div>
+    <div class="hero-image">
+        {% if hero_image %}
+            <img src="{{ hero_image.url }}" alt="SokoConnect Hero" class="hero-img">
+        {% else %}
+            <img src="{% static 'images/picha.png' %}" alt="SokoConnect Hero" class="hero-img">
+        {% endif %}
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features">
+    <div class="container">
+        <h2>Why Choose SokoConnect?</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-network-wired"></i>
+                </div>
+                <h3>Connect & Network</h3>
+                <p>Build meaningful connections with other traders and business owners in your community.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3>Grow Your Business</h3>
+                <p>Access new opportunities and expand your market reach with our platform.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-handshake"></i>
+                </div>
+                <h3>Collaborate</h3>
+                <p>Partner with other businesses and create win-win opportunities together.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3>Secure & Trusted</h3>
+                <p>Your business information is safe with our secure and reliable platform.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-globe"></i>
+                </div>
+                <h3>Local Focus</h3>
+                <p>Support your local economy and strengthen community bonds.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-headset"></i>
+                </div>
+                <h3>24/7 Support</h3>
+                <p>Our dedicated team is always here to help you succeed.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="how-it-works">
+    <div class="container">
+        <h2>How It Works</h2>
+        <div class="steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3>Sign Up</h3>
+                <p>Create your free account and set up your business profile</p>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3>Complete Profile</h3>
+                <p>Add details about your business and what you offer</p>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3>Discover Opportunities</h3>
+                <p>Find and connect with other businesses in your area</p>
+            </div>
+            <div class="step">
+                <div class="step-number">4</div>
+                <h3>Grow Together</h3>
+                <p>Collaborate and watch your business flourish</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats">
+    <div class="container">
+        <div class="stat-item">
+            <h3>1000+</h3>
+            <p>Active Traders</p>
+        </div>
+        <div class="stat-item">
+            <h3>50+</h3>
+            <p>Categories</p>
+        </div>
+        <div class="stat-item">
+            <h3>100+</h3>
+            <p>Partnerships</p>
+        </div>
+        <div class="stat-item">
+            <h3>24/7</h3>
+            <p>Support</p>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta">
+    <div class="container">
+        <h2>Ready to Join the Community?</h2>
+        <p>Start connecting with local businesses today and unlock new growth opportunities</p>
+        <div class="cta-buttons">
+            <a href="{% url 'business:register' %}" class="btn btn-primary btn-lg">Register Now</a>
+            <a href="{% url 'business:contact' %}" class="btn btn-secondary btn-lg">Contact Us</a>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="testimonials">
+    <div class="container">
+        <h2>What Our Members Say</h2>
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <div class="stars">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <p class="testimonial-text">"SokoConnect helped me find amazing business partners and grow my sales by 40%!"</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">JD</div>
+                    <div>
+                        <h4>John David</h4>
+                        <p>Retail Store Owner</p>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="stars">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <p class="testimonial-text">"The platform is easy to use and the community is incredibly supportive!"</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">SM</div>
+                    <div>
+                        <h4>Sarah Mwangi</h4>
+                        <p>Fashion Entrepreneur</p>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="stars">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <p class="testimonial-text">"Best business network I've joined. The connections I made are invaluable!"</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">PK</div>
+                    <div>
+                        <h4>LAD P</h4>
+                        <p>Tech Startup Founder</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

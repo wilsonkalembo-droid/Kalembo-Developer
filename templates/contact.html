@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contact Us - SokoConnect{% endblock %}
+
+{% block content %}
+<!-- Contact Hero -->
+<section class="contact-hero">
+    <div class="container">
+        <h1>Get In Touch</h1>
+        <p>We'd love to hear from you. Send us a message!</p>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section class="contact-section">
+    <div class="container">
+        <div class="contact-wrapper">
+            <!-- Contact Info -->
+            <div class="contact-info">
+                <h2>Contact Information</h2>
+                
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <div>
+                        <h3>Location</h3>
+                        <p>Dar es salaam<br>Tanzania</p>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <div>
+                        <h3>Phone</h3>
+                        <p>+255613850281</p>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div>
+                        <h3>Email</h3>
+                        <p>pk@okoconnect.com</p>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div>
+                        <h3>Business Hours</h3>
+                        <p>Monday - Friday: 8:00 AM - 6:00 PM<br>Saturday: 9:00 AM - 4:00 PM<br>Sunday: Closed</p>
+                    </div>
+                </div>
+
+                <div class="social-links">
+                    <h3>Follow Us</h3>
+                    <a href="https://www.facebook.com/me/"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.linkedin.com/in/packsens-kalembo"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+
+            <!-- Contact Form -->
+            <div class="contact-form-wrapper">
+                <h2>Send us a Message</h2>
+                <form class="contact-form" method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="name">Full Name *</label>
+                            <input type="text" id="name" name="name" required placeholder="Your Full Name">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address *</label>
+                            <input type="email" id="email" name="email" required placeholder="your@email.com">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" name="phone" placeholder="+255612345678">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="business_name">Business Name</label>
+                        <input type="text" id="business_name" name="business_name" placeholder="Your Business Name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="subject">Subject *</label>
+                        <select id="subject" name="subject" required>
+                            <option value="">Select a subject</option>
+                            <option value="partnership">Partnership Inquiry</option>
+                            <option value="support">Technical Support</option>
+                            <option value="feedback">Feedback</option>
+                            <option value="general">General Inquiry</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message">Message *</label>
+                        <textarea id="message" name="message" required placeholder="Tell us more about your inquiry..." rows="6"></textarea>
+                    </div>
+
+                    <div class="form-group checkbox">
+                        <input type="checkbox" id="privacy" name="privacy">
+                        <label for="privacy">I agree to the privacy policy and terms of service</label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="faq">
+    <div class="container">
+        <h2>Frequently Asked Questions</h2>
+        <div class="faq-grid">
+            <div class="faq-item">
+                <h3>How do I create an account?</h3>
+                <p>Visit our registration page and fill out your business information. It takes just 5 minutes to get started!</p>
+            </div>
+            <div class="faq-item">
+                <h3>Is SokoConnect free to join?</h3>
+                <p>Yes! Basic membership is completely free. We also offer premium plans for advanced features.</p>
+            </div>
+            <div class="faq-item">
+                <h3>How can I find business partners?</h3>
+                <p>Use our advanced search and filtering tools to find businesses that match your needs and interests.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Is my business information secure?</h3>
+                <p>Absolutely. We use industry-standard encryption to protect all your business data.</p>
+            </div>
+            <div class="faq-item">
+                <h3>How do I contact customer support?</h3>
+                <p>You can reach our support team via email, phone, or through the help center in your dashboard.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Can I update my business profile?</h3>
+                <p>Yes! You can update your profile information at any time from your account settings.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

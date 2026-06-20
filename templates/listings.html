@@ -1,0 +1,466 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Business Listings - SokoConnect{% endblock %}
+
+{% block content %}
+<!-- Listings Header Section -->
+<section class="listings-header">
+    <div class="container">
+        <h1>Discover Local Businesses</h1>
+        <p>Browse through {{ total_businesses }} approved businesses in our network</p>
+    </div>
+</section>
+
+<!-- Filter Section -->
+<section class="listings-filter">
+    <div class="container">
+        <div class="filter-bar">
+            <h3>Filter by Category</h3>
+            <div class="filter-buttons">
+                <a href="{% url 'business:listings' %}" 
+                   class="filter-btn {% if not selected_category %}active{% endif %}">
+                    All Businesses
+                </a>
+                {% for value, label in categories %}
+                    <a href="{% url 'business:listings' %}?category={{ value }}"
+                       class="filter-btn {% if selected_category == value %}active{% endif %}">
+                        {{ label }}
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Listings Grid -->
+<section class="listings-section">
+    <div class="container">
+        {% if businesses %}
+            <div class="listings-grid">
+                {% for business in businesses %}
+                    <div class="business-card">
+                        <!-- Logo -->
+                        <div class="business-logo-container">
+                            {% if business.logo %}
+                                <img src="{{ business.logo.url }}" alt="{{ business.business_name }}" class="business-logo">
+                            {% else %}
+                                <div class="business-logo-placeholder">
+                                    <i class="fas fa-store"></i>
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Business Info -->
+                        <div class="business-info">
+                            <div class="business-header">
+                                <h3>{{ business.business_name }}</h3>
+                                <span class="business-category">
+                                    <i class="fas fa-tag"></i> {{ business.get_category_display }}
+                                </span>
+                            </div>
+                            
+                            <!-- Description -->
+                            <p class="business-description">{{ business.description|truncatewords:20 }}</p>
+                            
+                            <!-- Pricing Section -->
+                            {% if business.min_price or business.max_price %}
+                                <div class="business-pricing">
+                                    <div class="pricing-badge">
+                                        <i class="fas fa-tag"></i>
+                                        <strong>Price:</strong> 
+                                        {% if business.min_price and business.max_price %}
+                                            {{ business.min_price }} - {{ business.max_price }}
+                                        {% elif business.min_price %}
+                                            From {{ business.min_price }}
+                                        {% else %}
+                                            Up to {{ business.max_price }}
+                                        {% endif %}
+                                        {% if business.price_unit %}<span class="price-unit">({{ business.price_unit }})</span>{% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}
+                            
+                            <!-- Operating Hours -->
+                            {% if business.operating_hours %}
+                                <div class="business-hours">
+                                    <i class="fas fa-clock"></i>
+                                    <strong>Hours:</strong> {{ business.operating_hours }}
+                                </div>
+                            {% endif %}
+                            
+                            <!-- Location -->
+                            {% if business.location %}
+                                <div class="business-location">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <strong>Location:</strong> {{ business.location }}
+                                </div>
+                            {% endif %}
+                            
+                            <!-- Requirements -->
+                            {% if business.requirements %}
+                                <div class="business-requirements">
+                                    <details>
+                                        <summary><i class="fas fa-list-check"></i> <strong>Requirements & Details</strong></summary>
+                                        <p>{{ business.requirements|linebreaks }}</p>
+                                    </details>
+                                </div>
+                            {% endif %}
+                            
+                            <!-- Contact Info -->
+                            <div class="business-contact">
+                                <div class="contact-item">
+                                    <i class="fas fa-phone"></i>
+                                    <a href="tel:{{ business.phone }}">{{ business.phone }}</a>
+                                </div>
+                                <div class="contact-item">
+                                    <i class="fas fa-envelope"></i>
+                                    <a href="mailto:{{ business.email }}">{{ business.email }}</a>
+                                </div>
+                            </div>
+                            
+                            <!-- Website Link -->
+                            {% if business.website %}
+                                <div class="business-actions">
+                                    <a href="{{ business.website }}" target="_blank" class="btn btn-primary btn-sm">
+                                        <i class="fas fa-globe"></i> Visit Website
+                                    </a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <i class="fas fa-inbox"></i>
+                <h3>No Businesses Found</h3>
+                <p>{% if selected_category %}No businesses found in this category.{% else %}No approved businesses yet.{% endif %}</p>
+                {% if not user.is_authenticated %}
+                    <a href="{% url 'business:register' %}" class="btn btn-primary">Start Your Business</a>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<style>
+.listings-header {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    color: white;
+    padding: 3rem 0;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.listings-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    color: white;
+}
+
+.listings-header p {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.listings-filter {
+    background: var(--light-color);
+    padding: 2rem 0;
+    margin-bottom: 3rem;
+}
+
+.filter-bar h3 {
+    margin-bottom: 1.5rem;
+    color: var(--dark-color);
+}
+
+.filter-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.filter-btn {
+    padding: 0.75rem 1.5rem;
+    border: 2px solid var(--border-color);
+    border-radius: 50px;
+    background: white;
+    color: var(--gray-color);
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--transition);
+    cursor: pointer;
+}
+
+.filter-btn:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+.filter-btn.active {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.listings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.business-card {
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 15px;
+    overflow: hidden;
+    transition: var(--transition);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.business-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow);
+}
+
+.business-logo-container {
+    width: 100%;
+    height: 200px;
+    background: var(--light-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.business-logo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.business-logo-placeholder {
+    font-size: 4rem;
+    color: var(--primary-color);
+    opacity: 0.3;
+}
+
+.business-info {
+    padding: 1.5rem;
+}
+
+.business-info h3 {
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+    color: var(--dark-color);
+}
+
+.business-category {
+    display: inline-block;
+    background: var(--light-color);
+    color: var(--primary-color);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.business-description {
+    color: var(--gray-color);
+    margin-bottom: 1rem;
+    line-height: 1.5;
+}
+
+.business-contact {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    color: var(--gray-color);
+    font-size: 0.9rem;
+}
+
+.contact-item i {
+    width: 20px;
+    margin-right: 0.75rem;
+    color: var(--primary-color);
+}
+
+.contact-item a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.contact-item a:hover {
+    text-decoration: underline;
+}
+
+/* Pricing Section */
+.business-pricing {
+    margin-bottom: 1rem;
+}
+
+.pricing-badge {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border-left: 4px solid #f59e0b;
+    padding: 1rem;
+    border-radius: 8px;
+    color: #92400e;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.pricing-badge i {
+    color: #d97706;
+}
+
+.price-unit {
+    font-size: 0.85rem;
+    opacity: 0.8;
+}
+
+/* Hours Section */
+.business-hours {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    color: var(--gray-color);
+    font-size: 0.95rem;
+    padding: 0.75rem;
+    background: #f0f9ff;
+    border-radius: 8px;
+    border-left: 3px solid #0ea5e9;
+}
+
+.business-hours i {
+    color: #0ea5e9;
+    width: 20px;
+}
+
+/* Location Section */
+.business-location {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    color: var(--gray-color);
+    font-size: 0.95rem;
+    padding: 0.75rem;
+    background: #f0fdf4;
+    border-radius: 8px;
+    border-left: 3px solid #10b981;
+}
+
+.business-location i {
+    color: #10b981;
+    width: 20px;
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+/* Requirements Section */
+.business-requirements {
+    margin: 1rem 0;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 3px solid #6366f1;
+}
+
+.business-requirements details {
+    cursor: pointer;
+}
+
+.business-requirements summary {
+    color: #4f46e5;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    margin: -0.5rem;
+    padding: 0.5rem;
+}
+
+.business-requirements summary:hover {
+    color: #4f46e5;
+    opacity: 0.8;
+}
+
+.business-requirements summary i {
+    color: #6366f1;
+}
+
+.business-requirements p {
+    margin-top: 1rem;
+    color: #555;
+    line-height: 1.6;
+    white-space: pre-wrap;
+}
+
+.business-header {
+    margin-bottom: 1rem;
+}
+
+.business-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+}
+
+.empty-state i {
+    font-size: 4rem;
+    color: var(--primary-color);
+    opacity: 0.3;
+    margin-bottom: 1rem;
+}
+
+.empty-state h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+    color: var(--gray-color);
+    margin-bottom: 2rem;
+}
+
+@media (max-width: 768px) {
+    .listings-header h1 {
+        font-size: 2rem;
+    }
+    
+    .filter-buttons {
+        flex-direction: column;
+    }
+    
+    .filter-btn {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .listings-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+{% endblock %}
